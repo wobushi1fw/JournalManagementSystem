@@ -52,23 +52,63 @@ public class GoodsController {
         String name = (String) param.get("name");
         String goodstype = (String) param.get("goodstype");
         String storage = (String) param.get("storage");
+        String owner = (String) param.get("owner");
+        Integer power = (Integer) param.get("power");
+
+        System.out.println("name:"+name);
+        System.out.println("stor:"+storage);
+        System.out.println("owner:"+owner);
+        System.out.println("power:"+power);
 
         Page<Goods> page = new Page();
         page.setCurrent(query.getPageNum());
         page.setSize(query.getPageSize());
 
         LambdaQueryWrapper<Goods> lambdaQueryWrapper = new LambdaQueryWrapper();
-        if(StringUtils.isNotBlank(name)&&!"null".equals(name)){
-            lambdaQueryWrapper.like(Goods::getName, name);
+        if (power==0 | power ==1){
+            if(StringUtils.isNotBlank(name)&&!"null".equals(name)){
+                System.out.println("11");
+                lambdaQueryWrapper.like(Goods::getName, name);
+            }
+
+            if(StringUtils.isNotBlank(goodstype)&&!"null".equals(goodstype)){
+                System.out.println("22");
+                lambdaQueryWrapper.eq(Goods::getGoodstype, goodstype);
+            }
+
+            if(StringUtils.isNotBlank(storage)&&!"null".equals(storage)){
+                System.out.println("33");
+                lambdaQueryWrapper.eq(Goods::getStorage, storage);
+            }
+        }else {
+            if(!StringUtils.isNotBlank(name)
+                    &&!StringUtils.isNotBlank(storage)
+                    && !StringUtils.isNotBlank(goodstype)
+                    && StringUtils.isNotBlank(owner))
+            {
+
+                lambdaQueryWrapper.like(Goods::getRemark, owner);
+            }
+
+            if(StringUtils.isNotBlank(name)&&!"null".equals(name)){
+                System.out.println("11");
+                lambdaQueryWrapper.like(Goods::getName, name)
+                        .like(Goods::getRemark,owner);
+            }
+
+            if(StringUtils.isNotBlank(goodstype)&&!"null".equals(goodstype)){
+                System.out.println("22");
+                lambdaQueryWrapper.eq(Goods::getGoodstype, goodstype)
+                        .like(Goods::getRemark,owner);
+            }
+
+            if(StringUtils.isNotBlank(storage)&&!"null".equals(storage)){
+                System.out.println("33");
+                lambdaQueryWrapper.eq(Goods::getStorage, storage)
+                        .like(Goods::getRemark,owner);
+            }
         }
 
-        if(StringUtils.isNotBlank(goodstype)&&!"null".equals(goodstype)){
-            lambdaQueryWrapper.eq(Goods::getGoodstype, goodstype);
-        }
-
-        if(StringUtils.isNotBlank(storage)&&!"null".equals(storage)){
-            lambdaQueryWrapper.eq(Goods::getStorage, storage);
-        }
 
         IPage result = goodsService.pageCC(page, lambdaQueryWrapper);
 

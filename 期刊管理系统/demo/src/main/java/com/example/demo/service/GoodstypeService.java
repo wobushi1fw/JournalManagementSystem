@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.demo.entity.Goodstype;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.entity.Storage;
 
 /**
  * <p>
